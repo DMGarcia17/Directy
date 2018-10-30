@@ -37,7 +37,8 @@ require_once 'core/fdb.php';
       $final = 'users/' . $_SESSION['user'] . '/products/' . $name;
       if (move_uploaded_file($_FILES['img']['tmp_name'], $final)) {
         try{
-          if($db->insert("insert into products values (null, '{$_POST['name']}', '{$_POST['desc']}', '{$final}', '{$_POST['price']}', 
+          if($db->insert("insert into products values (null, '{$_POST['name']}',
+          '{$_POST['desc']}', '{$final}', '{$_POST['price']}', 
           '{$_SESSION['user']}')")>=1){
             echo "Producto Registrado";
           }else{
