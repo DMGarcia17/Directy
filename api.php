@@ -69,7 +69,7 @@ function registrar_producto(PDO $data, $string)
 
 
 try {
-    if ($db = new PDO('mysql:host=127.0.0.1;dbname=foodapp', 'admin', 'dan48')) {
+    if ($db = new PDO('mysql:host=localhost;dbname=foodapp', 'root', '')) {
         // echo "Conexion establecida";
     } else {
         // echo "Fallo";
