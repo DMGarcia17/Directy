@@ -1,14 +1,42 @@
 <?php
 $db = null;
 
+header('Content-Type: application/json; charset=utf-8');
+
 function listar_busqueda_empresas(PDO $data, $filtro)
 {
-    $query = $data->prepare("SELECT c_name, logo, ubication
-        FROM users
-        WHERE c_name LIKE '%$filtro%'");
+    $query = $data->prepare("SELECT *
+        FROM products
+        WHERE name LIKE '%$filtro%'");
     $query->execute();
     $res = $query->fetchAll(PDO::FETCH_ASSOC);
-    return json_encode($res);
+    $final['products'] = $res;
+
+    return json_encode($final);
+}
+
+function listar_una_empresa(PDO $data, $filtro)
+{
+    $query = $data->prepare("SELECT *
+        FROM products
+        WHERE id_pro=$filtro");
+    $query->execute();
+    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+    $final['products'] = $res;
+
+    return json_encode($final);
+}
+
+function listar_detalles(PDO $data, $filtro)
+{
+    $query = $data->prepare("SELECT *
+        FROM users
+        WHERE username='$filtro'");
+    $query->execute();
+    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+    $final['products'] = $res;
+
+    return json_encode($final);
 }
 
 function login(PDO $data)
@@ -67,6 +95,24 @@ function registrar_producto(PDO $data, $string)
     }
 }
 
+function volcado(PDO $data)
+{
+    try{
+        $res = $data->prepare("SELECT * FROM products");
+        if($res->execute()){
+            $r = $res->fetchAll(PDO::FETCH_ASSOC);
+            $final['products'][] = $res[0]['img'];
+            print_r($final);
+            echo json_encode($final);
+        }else{
+            print_r($r);
+        }
+    }catch(Exception $e){
+        echo $e->getMessage();
+    }
+
+}
+
 
 try {
     if ($db = new PDO('mysql:host=localhost;dbname=foodapp', 'root', '')) {
@@ -86,9 +132,14 @@ try {
         echo login($db);
         break;
       case 4:
+        echo volcado($db);
         break;
       case 5:
+        echo listar_una_empresa($db, $_REQUEST['filtro']);
         break;
+      case 6:
+          listar_detalles($db, $_REQUEST['filtro']);
+          break;
 
     }
     }
